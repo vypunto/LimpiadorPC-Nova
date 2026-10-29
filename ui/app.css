@@ -633,3 +633,29 @@ kbd { font: 600 10.5px var(--mono); padding: 2px 6px; border-radius: 6px; border
 .ob-dots button.on { width: 26px; background: var(--grad); }
 .ob-nav { display: flex; gap: 8px; justify-content: flex-end; }
 .ob-nav .btn { min-width: 0; }
+
+/* ---------- Movimientos espontáneos de Smally ---------- */
+.smally.a-stretch .smally-bot { animation: stretch 1.9s ease-in-out; }
+.smally.a-stretch .arm-l { animation: armsup-l 1.9s ease-in-out; }
+.smally.a-stretch .arm-r { animation: armsup-r 1.9s ease-in-out; }
+@keyframes stretch { 30%, 60% { transform: scale(.96, 1.08) translateY(-4px); } }
+@keyframes armsup-l { 25%, 65% { transform: rotate(-75deg); } }
+@keyframes armsup-r { 25%, 65% { transform: rotate(75deg); } }
+.smally.a-dance .smally-bot { animation: dance 2.6s ease-in-out; }
+.smally.a-dance .arm-l { animation: swing-l .32s ease-in-out 8 alternate; }
+.smally.a-dance .arm-r { animation: swing-r .32s ease-in-out 8 alternate; }
+@keyframes dance { 12%, 37%, 62%, 87% { transform: rotate(-9deg) translateY(-3px); } 25%, 50%, 75% { transform: rotate(9deg) translateY(0); } }
+@keyframes swing-l { from { transform: rotate(20deg); } to { transform: rotate(-60deg); } }
+@keyframes swing-r { from { transform: rotate(-20deg); } to { transform: rotate(60deg); } }
+.smally.a-stroll .smally-wrap { animation: stroll 4.2s ease-in-out; }
+.smally.a-stroll .smally-bot { animation: bob .35s ease-in-out 12 alternate; }
+.smally.a-stroll .arm-l { animation: swing-l .35s ease-in-out 12 alternate; }
+.smally.a-stroll .arm-r { animation: swing-r .35s ease-in-out 12 alternate-reverse; }
+@keyframes stroll { 40%, 55% { transform: translateX(var(--walk, -60px)); } }
+@keyframes bob { to { transform: translateY(-4px) rotate(3deg); } }
+.smally.a-hop .smally-bot { animation: hop .45s ease-in-out 3; }
+.smally.a-hop .arm-l { animation: armsup-l 1.4s ease-in-out; }
+.smally.a-hop .arm-r { animation: armsup-r 1.4s ease-in-out; }
+/* La ✕ de ocultar, siempre un poco visible */
+.smally-x { opacity: .4; transform: none; }
+.smally-wrap:hover .smally-x { opacity: 1; }

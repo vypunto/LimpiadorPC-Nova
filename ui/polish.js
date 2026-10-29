@@ -49,6 +49,9 @@ function commands() {
     { icon: "clock", title: "Historial", sub: "Lo que se ha limpiado o cambiado", run: () => ACT.hist() },
     { icon: "key", title: "Ejecutar como administrador", sub: "Desbloquea todas las reparaciones", run: () => ACT.elevate() },
     { icon: "pulse", title: "Hablar con Smally", sub: "Abre el chat", run: () => { if (document.body.classList.contains("smally-hidden")) EXTRA_ACT.smallyshow(); if (!CHAT.open) toggleChat(); } },
+    document.body.classList.contains("smally-hidden")
+      ? { icon: "eye", title: "Mostrar a Smally", sub: "Vuelve a aparecer", run: () => EXTRA_ACT.smallyshow() }
+      : { icon: "x", title: "Ocultar a Smally", sub: "Se esconde hasta que lo vuelvas a llamar", run: () => setHidden(true) },
   );
   (S.fixes || []).forEach((f) => list.push({ icon: f.icon, title: f.title, sub: `Reparar · ${f.group}${f.admin ? " · admin" : ""}`, run: () => { go("reparar"); ACT.fix(f.id); } }));
   return list;

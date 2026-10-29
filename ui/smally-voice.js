@@ -71,7 +71,11 @@ renderChat = () => {
   };
   if (hasVoice) mk("sm-voice", voiceOn ? "🔊" : "🔇", voiceOn ? "Silenciar a Smally" : "Que Smally lea sus respuestas en voz alta");
   mk("sm-tips", TIPSCFG.on ? "💡 Consejos: sí" : "💤 Consejos: no", "Consejos automáticos");
+  mk("sm-hide", "Ocultar", "Esconder a Smally (vuelve desde la barra lateral)");
 };
+document.addEventListener("click", (e) => {
+  if (e.target.id === "sm-hide") { setHidden(true); toast("Smally se ha escondido. Vuelve con «Mostrar a Smally» en la barra lateral", "info"); }
+});
 document.addEventListener("click", (e) => {
   if (e.target.id === "sm-voice") {
     voiceOn = !voiceOn;

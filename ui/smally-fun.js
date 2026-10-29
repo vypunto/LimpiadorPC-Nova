@@ -185,9 +185,26 @@ if (load("nova-smally-hidden") === "1") setHidden(true);
 new MutationObserver(() => {
   if (!CHAT.open && document.getElementById("smally-bubble").innerHTML) { act("wave"); SFACE.flash("happy", 1500); SFACE.talk(1200); }
 }).observe(document.getElementById("smally-bubble"), { childList: true });
-setInterval(() => {
-  if (document.body.classList.contains("smally-hidden") || CHAT.open || drag || FUN.mood !== "happy") return;
-  const r = Math.random();
-  if (r < 0.3) { SFACE.look(r < 0.15 ? -14 : 14, -3); SFACE.flash("curious", 1600); } else if (r < 0.5) act("wave"); else if (r < 0.6) act("squash", 400);
-}, 14000);
+// Cada cierto tiempo hace algo, con cualquier humor (menos dormido o mientras lo arrastras)
+const IDLE_ACTS = [
+  ["wave", 1500, "happy"], ["stretch", 1900, "relaxed"], ["dance", 2600, "playful"],
+  ["stroll", 4200, "curious"], ["hop", 1400, "excited"], ["look", 2200, "curious"],
+];
+let lastIdle = "";
+function idleAct() {
+  if (document.body.classList.contains("smally-hidden") || CHAT.open || drag || box.classList.contains("dizzy")
+      || FUN.mood === "sleepy" || document.querySelector(".modal-wrap")) return;
+  const options = IDLE_ACTS.filter(([n]) => n !== lastIdle);
+  const [name, ms, face] = pick(options);
+  lastIdle = name;
+  if (name === "look") {
+    SFACE.look(-14, -2); setTimeout(() => SFACE.look(14, -2), 900); setTimeout(() => SFACE.look(0, 0), 1800);
+  } else if (name === "stroll") {
+    // Paseíto hacia el lado donde hay sitio, y vuelta
+    box.style.setProperty("--walk", box.classList.contains("left") ? "60px" : "-60px");
+  }
+  if (FUN.mood === "happy" || name === "dance") SFACE.flash(face, ms);
+  act(name, ms);
+}
+(function loop() { setTimeout(() => { idleAct(); loop(); }, 11000 + Math.random() * 9000); })();
 applyMood();
