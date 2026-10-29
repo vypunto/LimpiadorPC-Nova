@@ -41,10 +41,6 @@ function confetti(chars = ["✨", "🎉", "⭐", "💫", "🧹"]) {
 }
 
 /* ---------- Humor según el estado real ---------- */
-const MOUTHS = {
-  happy: "M27 37 q5 4 10 0", dizzy: "M26 38 q1.5 -2 3 0 t3 0 t3 0 t3 0", party: "M26 35 q6 8 12 0 q-6 2 -12 0", worried: "M27 39 q5 -3 10 0", alarm: "M28 40 q4 -5 8 0",
-  busy: "M29 38 h6", thinking: "M28 38 q2 -1.5 4 0 t4 0", sleepy: "M30 38 q2 1.4 4 0",
-};
 const WORK = new Set(["clean_run", "optimize", "fix", "sec_scan", "sec_update", "console", "devjunk", "dupes", "aiorg"]);
 function computeMood() {
   if (Object.entries(S.jobs).some(([k, j]) => WORK.has(k) && j.state === "running")) return "busy";
@@ -56,16 +52,23 @@ function computeMood() {
   if (probs.some((p) => p.severity === "warn") || (res("sec_audit")?.findings || []).some((f) => f.severity === "high")) return "worried";
   return "happy";
 }
+// Humor de la app → expresión del Smally original
+const MOOD_FACE = { happy: "neutral", alarm: "worried", worried: "empathetic", busy: "focused", thinking: "thinking", sleepy: "sleepy", party: "excited" };
+// Cuando está tranquilo, de vez en cuando cambia de gesto para parecer vivo
+const IDLE_FACES = ["relaxed", "curious", "attentive", "amused", "playful", "happy", "guino", "ilusionado"];
 function applyMood() {
-  if (box.classList.contains("dizzy")) { bot.querySelector(".mouth").setAttribute("d", MOUTHS.dizzy); return; }
+  if (box.classList.contains("dizzy")) { SFACE.set("perplejo"); return; }
   const m = computeMood();
   if (m === FUN.mood) return;
-  if (FUN.mood === "sleepy" && m !== "sleepy") { act("squash", 400); quip(pick(QUIPS.wake)); }
+  if (FUN.mood === "sleepy" && m !== "sleepy") { act("squash", 400); SFACE.flash("surprised", 700); quip(pick(QUIPS.wake)); }
   box.classList.remove("m-" + FUN.mood);
   box.classList.add("m-" + m);
-  bot.querySelector(".mouth").setAttribute("d", MOUTHS[m] || MOUTHS.happy);
+  SFACE.set(MOOD_FACE[m] || "neutral");
   FUN.mood = m;
 }
+setInterval(() => {
+  if (FUN.mood === "happy" && !CHAT.open && !box.classList.contains("dizzy") && Math.random() < 0.6) SFACE.flash(pick(IDLE_FACES), 2200 + Math.random() * 1800);
+}, 9000);
 setInterval(applyMood, 800);
 ["mousemove", "keydown", "pointerdown", "wheel"].forEach((ev) => addEventListener(ev, () => (FUN.lastActive = Date.now()), { passive: true }));
 
@@ -85,7 +88,7 @@ addEventListener("mousemove", (e) => {
   if (FUN.mood === "sleepy" || FUN.mood === "thinking" || box.classList.contains("dizzy")) return;
   const r = bot.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
   const dx = e.clientX - cx, dy = e.clientY - cy, d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 300);
-  bot.querySelector(".eyes").style.transform = `translate(${(dx / d) * 2.6 * k}px, ${(dy / d) * 2 * k}px)`;
+  SFACE.look((dx / d) * 14 * k, (dy / d) * 9 * k);
 }, { passive: true });
 
 /* ---------- Arrastrar y colocar ---------- */
@@ -125,7 +128,7 @@ bot.addEventListener("pointermove", (e) => {
   if (!drag.moved && Math.hypot(dx, dy) < 6) return;
   if (!drag.moved) {
     // Al cogerlo se cierran el bocadillo y el chat: solo se arrastra el robot
-    drag.moved = true; box.classList.add("dragging", "dizzy");
+    drag.moved = true; box.classList.add("dragging", "dizzy"); SFACE.dizzy(true); SFACE.set("perplejo");
     clearTimeout(FUN.dizzyT);
     clearTimeout(bubbleTimer);
     if (CHAT.open) { CHAT.open = false; if (typeof shush === "function") shush(); }
@@ -143,7 +146,7 @@ bot.addEventListener("pointerup", () => {
     store("nova-smally-pos", JSON.stringify({ x: x / innerWidth, y: y / innerHeight }));
     act("squash", 400);
     // Sigue mareado un momento después de soltarlo
-    FUN.dizzyT = setTimeout(() => { box.classList.remove("dizzy"); FUN.mood = ""; applyMood(); }, 2200);
+    FUN.dizzyT = setTimeout(() => { box.classList.remove("dizzy"); SFACE.dizzy(false); FUN.mood = ""; applyMood(); SFACE.flash("aliviado", 1600); }, 2200);
     setTimeout(() => quip(pick(QUIPS.dizzy)), 200);
   }
   drag = null;
@@ -153,8 +156,8 @@ bot.onclick = () => {
   if (FUN.dragged) { FUN.dragged = false; return; }
   const now = Date.now();
   FUN.pokes = FUN.pokes.filter((t) => now - t < 3000).concat(now);
-  act("squash", 400);
-  if (FUN.pokes.length >= 4) { FUN.pokes = []; act("spin", 800); robotSound(); if (CHAT.open) toggleChat(); setTimeout(() => quip(pick(QUIPS.poke)), 100); return; }
+  act("squash", 400); SFACE.flash(CHAT.open ? "happy" : "surprised", 600);
+  if (FUN.pokes.length >= 4) { FUN.pokes = []; act("spin", 800); SFACE.flash("amused", 2200); robotSound(); if (CHAT.open) toggleChat(); setTimeout(() => quip(pick(QUIPS.poke)), 100); return; }
   toggleChat();
 };
 function restorePos() {
@@ -180,11 +183,11 @@ if (load("nova-smally-hidden") === "1") setHidden(true);
 
 /* ---------- Animaciones espontáneas ---------- */
 new MutationObserver(() => {
-  if (!CHAT.open && document.getElementById("smally-bubble").innerHTML) act("wave");
+  if (!CHAT.open && document.getElementById("smally-bubble").innerHTML) { act("wave"); SFACE.flash("happy", 1500); SFACE.talk(1200); }
 }).observe(document.getElementById("smally-bubble"), { childList: true });
 setInterval(() => {
   if (document.body.classList.contains("smally-hidden") || CHAT.open || drag || FUN.mood !== "happy") return;
   const r = Math.random();
-  if (r < 0.3) act("look", 1600); else if (r < 0.5) act("wave"); else if (r < 0.6) act("squash", 400);
+  if (r < 0.3) { SFACE.look(r < 0.15 ? -14 : 14, -3); SFACE.flash("curious", 1600); } else if (r < 0.5) act("wave"); else if (r < 0.6) act("squash", 400);
 }, 14000);
 applyMood();

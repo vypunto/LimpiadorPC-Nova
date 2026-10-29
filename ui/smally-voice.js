@@ -54,6 +54,7 @@ const _ask = askSmally;
 askSmally = async (q) => {
   await _ask(q);
   const m = CHAT.msgs.at(-1);
+  if (m?.role === "assistant") { SFACE.flash("speaking", Math.min(5000, 900 + m.content.length * 25)); SFACE.talk(Math.min(5000, 900 + m.content.length * 25)); }
   if (m?.role === "assistant") speak(m.content);
 };
 // Botones de voz y de consejos en la cabecera del chat
@@ -128,3 +129,4 @@ function scheduleTips() {
     scheduleTips();
   } else setTimeout(() => waitName(n + 1), 500);
 })();
+document.addEventListener("input", (e) => { if (e.target.id === "chat-q") SFACE.flash("listening", 1500); });
