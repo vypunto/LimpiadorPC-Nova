@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Limpiador PC Nova</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235ef2d6'/%3E%3Cstop offset='.55' stop-color='%236aa8ff'/%3E%3Cstop offset='1' stop-color='%23a78bfa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Crect x='7' y='7' width='18' height='18' rx='5' fill='%2305070b'/%3E%3Crect x='12' y='12' width='8' height='8' rx='2' fill='url(%23g)'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="backdrop"><div class="grid"></div></div>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5ef2d6"/><stop offset=".55" stop-color="#6aa8ff"/><stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+    <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5ef2d6" stop-opacity=".28"/><stop offset="1" stop-color="#5ef2d6" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="sparkFill2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a78bfa" stop-opacity=".3"/><stop offset="1" stop-color="#a78bfa" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="orb"></div>
+      <div><b>Nova</b><small>Limpiador PC</small></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot" id="sidefoot"></div>
+  </aside>
+  <main class="main">
+    <header class="top">
+      <div><h1 id="title">Panel</h1><p id="subtitle"></p></div>
+      <div class="live">
+        <button class="btn theme-btn" id="theme-btn" title="Cambiar modo día / noche"></button>
+        <div class="chip-live">CPU <svg id="mini-cpu" viewBox="0 0 56 18" preserveAspectRatio="none"></svg><b id="live-cpu">—</b></div>
+        <div class="chip-live">RAM <svg id="mini-ram" viewBox="0 0 56 18" preserveAspectRatio="none"></svg><b id="live-ram">—</b></div>
+      </div>
+    </header>
+    <section class="view" id="view"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div id="tipbox"></div>
+<div class="smally" id="smally">
+  <div id="smally-bubble"></div>
+  <div class="smally-wrap">
+  <button class="smally-x" id="smally-x" title="Ocultar a Smally">✕</button>
+  <span class="smally-zzz" aria-hidden="true">z<b>z</b><i>z</i></span>
+  <span class="smally-fx" id="smally-fx" aria-hidden="true"></span>
+  <svg class="smally-bot" id="smally-bot" viewBox="-8 -4 80 72" aria-label="Smally, tu asistente">
+    <defs><linearGradient id="smg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ef2d6"/><stop offset=".55" stop-color="#6aa8ff"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
+    <path class="arm arm-l" d="M7 38 q-9 2 -11 -8" stroke="url(#smg)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path class="arm arm-r" d="M57 38 q9 2 11 -8" stroke="url(#smg)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <g class="antenna"><line x1="32" y1="9" x2="32" y2="2" stroke="url(#smg)" stroke-width="2.5" stroke-linecap="round"/><circle class="ant" cx="32" cy="2" r="3.2"/></g>
+    <rect x="6" y="10" width="52" height="46" rx="20" fill="url(#smg)"/>
+    <rect x="11" y="16.5" width="42" height="30" rx="13" fill="#05070b"/>
+    <g class="brows"><path class="brow brow-l" d="M19 22.5 l9 1.6"/><path class="brow brow-r" d="M45 22.5 l-9 1.6"/></g>
+    <g class="eyes"><g class="eye"><ellipse class="eye-l" cx="24" cy="30" rx="3.6" ry="4.4"/><ellipse class="eye-r" cx="40" cy="30" rx="3.6" ry="4.4"/></g></g>
+    <g class="dizzy-eyes"><path class="spiral spiral-l" d="M24 30 m0 -0.5 a0.5 0.5 0 1 1 -0.5 0.5 a1.5 1.5 0 1 1 1.5 1.5 a2.6 2.6 0 1 1 -2.6 -2.6 a3.6 3.6 0 1 1 3.6 3.6"/>
+      <path class="spiral spiral-r" d="M40 30 m0 -0.5 a0.5 0.5 0 1 1 -0.5 0.5 a1.5 1.5 0 1 1 1.5 1.5 a2.6 2.6 0 1 1 -2.6 -2.6 a3.6 3.6 0 1 1 3.6 3.6"/></g>
+    <path class="mouth" d="M27 37 q5 4 10 0" stroke-width="2" fill="none" stroke-linecap="round" style="transform-origin:32px 38px"/>
+    <circle class="cheek" cx="13" cy="44" r="3"/><circle class="cheek" cx="51" cy="44" r="3"/>
+  </svg>
+  </div>
+</div>
+<script src="app.js"></script>
+<script src="support.js"></script>
+<script src="info.js"></script>
+<script src="extras.js"></script>
+<script src="organizer.js"></script>
+<script src="solutions.js"></script>
+<script src="smally.js"></script>
+<script src="smally-brain.js"></script>
+<script src="smally-voice.js"></script>
+<script src="smally-fun.js"></script>
+<script src="welcome.js"></script>
+<script src="polish.js"></script>
+</body>
+</html>

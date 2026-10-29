@@ -1,0 +1,11 @@
+# Compilación
+build/
+dist/
+*.spec
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Generado al compilar
+tools/nova.ico
